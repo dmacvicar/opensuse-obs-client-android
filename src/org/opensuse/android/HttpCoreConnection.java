@@ -7,24 +7,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-import org.apache.http.HttpException;
-import org.apache.http.HttpHost;
-import org.apache.http.HttpRequest;
-import org.apache.http.HttpRequestInterceptor;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.*;
 import org.apache.http.auth.AuthScope;
-import org.apache.http.auth.AuthState;
-import org.apache.http.auth.Credentials;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.methods.*;
-import org.apache.http.client.protocol.ClientContext;
 import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.auth.BasicScheme;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.protocol.BasicHttpContext;
-import org.apache.http.protocol.ExecutionContext;
-
 import android.util.Log;
 
 import zipwire.rest.Resource;
