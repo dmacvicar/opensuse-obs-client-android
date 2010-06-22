@@ -14,6 +14,7 @@
 
     <activity android:name="ProjectListActivity"></activity>
 <activity android:name="DistributionListActivity"></activity>
+<activity android:name="BuildServiceSettingsActivity"></activity>
 </application>
 
 
