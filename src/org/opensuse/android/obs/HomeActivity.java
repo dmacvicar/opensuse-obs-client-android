@@ -82,9 +82,10 @@ public class HomeActivity extends ListActivity {
     	{
     		case 0:    			 
     			startActivity(new Intent(HomeActivity.this, ProjectListActivity.class));
+    			break;
     		case 1:    			 
     			startActivity(new Intent(HomeActivity.this, DistributionListActivity.class));
-    	    break;
+    			break;
     	}
     }
 }

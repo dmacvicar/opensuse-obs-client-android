@@ -59,7 +59,7 @@ public class ProjectListActivity extends ListActivity {
 	private void getProjects(){
         try{
             projects = new ArrayList<Project>();
-            Client client = new Client();
+            Client client = new Client(this);
             projects = client.getProjects();
             Log.i("ARRAY", ""+ projects.size());
           } catch (Exception e) { 
@@ -88,7 +88,7 @@ public class ProjectListActivity extends ListActivity {
                 if (p != null) {
                         TextView tt = (TextView) v.findViewById(android.R.id.text1);
                         if (tt != null) {
-                              tt.setText("Name: "+"foo");                            
+                              tt.setText("Name: " + p.getName());                            
                         }
                 }
                 return v;

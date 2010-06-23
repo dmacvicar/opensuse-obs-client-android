@@ -27,12 +27,36 @@ public class HttpCoreConnection implements RestConnection {
 	
 	public HttpCoreConnection(String host, String username, String password, XmlNamingRule xmlNamingRule) {
 		if (host == null) throw new ZipwireException("Need to specify a host, username, and password");
-		this.protocol = "https://";
+		this.protocol = "http://";
 		this.host = host;
 		this.username = username;
 		this.password = password;
 		this.xmlNamingRule = xmlNamingRule;
 	}
+	
+	public HttpCoreConnection() {
+	}
+	
+	public void setProtocol(String protocol) {
+		this.protocol = protocol;
+	}
+	
+	public void setHost(String host) {
+		this.host = host;
+	}
+	
+	public void setUsername(String username) {
+		this.username = username;
+	}
+	
+	public void setPassword(String password) {
+		this.password = password;
+	}
+	
+	public void setXmlNamingRule(XmlNamingRule xmlNamingRule) {
+		this.xmlNamingRule = xmlNamingRule;
+	}
+	
 	public Resource get(String uri) {
         return execute(new HttpGet(buildUri(uri)));
 	}

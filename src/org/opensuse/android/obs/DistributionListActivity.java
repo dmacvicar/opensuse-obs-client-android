@@ -3,11 +3,9 @@ package org.opensuse.android.obs;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -59,7 +57,7 @@ public class DistributionListActivity extends ListActivity {
 	private void getDistributions(){
         try{
             Distributions = new ArrayList<Distribution>();
-            Client client = new Client();
+            Client client = new Client(this);
             Distributions = client.getDistributions();
             Log.i("ARRAY", ""+ Distributions.size());
           } catch (Exception e) { 
@@ -84,11 +82,11 @@ public class DistributionListActivity extends ListActivity {
                     LayoutInflater vi = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                     v = vi.inflate(android.R.layout.simple_list_item_1, null);
                 }
-                Distribution p = items.get(position);
-                if (p != null) {
+                Distribution dist = items.get(position);
+                if (dist != null) {
                         TextView tt = (TextView) v.findViewById(android.R.id.text1);
                         if (tt != null) {
-                              tt.setText(p.getName());                            
+                              tt.setText(dist.getName());
                         }
                 }
                 return v;

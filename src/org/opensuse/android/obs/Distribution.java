@@ -5,4 +5,6 @@ public interface Distribution {
 	String getProject();
 	String getReponame();
 	String getRepository();
+	String getVendor();
+	String getVersion();
 }
