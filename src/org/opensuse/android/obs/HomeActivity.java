@@ -30,14 +30,21 @@ public class HomeActivity extends ListActivity {
     public void onCreate(Bundle savedInstanceState) {
     	Log.i("FOO", "start!");
         super.onCreate(savedInstanceState);
-        
-        // Initialize preferences
-		preferences = PreferenceManager.getDefaultSharedPreferences(this);
-		String username = preferences.getString("username", "n/a");
-		String password = preferences.getString("password", "n/a");
-		
         //setContentView(R.layout.main);
         setListAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, MAIN_MENU));
+        
+     // Initialize preferences if not configured
+		preferences = PreferenceManager.getDefaultSharedPreferences(this);
+		String username = preferences.getString("username", "");
+		
+		if (username == "") {
+			Intent i = new Intent(HomeActivity.this, BuildServiceSettingsActivity.class);
+			startActivity(i);
+			// A toast is a view containing a quick little message for the user.
+			Toast.makeText(HomeActivity.this,
+					"Please configure your build service credentials",
+					Toast.LENGTH_LONG).show();
+		}
     }
     
     @Override
