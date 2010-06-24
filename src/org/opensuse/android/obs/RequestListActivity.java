@@ -3,11 +3,9 @@ package org.opensuse.android.obs;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,29 +14,29 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-public class ProjectListActivity extends ListActivity {
+public class RequestListActivity extends ListActivity {
 	private ProgressDialog progressDialog = null; 
-    private List<ProjectId> projects = null;
-    private ArrayAdapter<ProjectId> adapter;
-    private Runnable viewProjects;
+    private List<Request> requests = null;
+    private ArrayAdapter<Request> adapter;
+    private Runnable viewRequests;
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
-        projects = new ArrayList<ProjectId>();
-        this.adapter = new ProjectAdapter(this, android.R.layout.simple_list_item_1, projects);
+        requests = new ArrayList<Request>();
+        this.adapter = new RequestAdapter(this, android.R.layout.simple_list_item_1, requests);
         setListAdapter(this.adapter);
 
-        viewProjects = new Runnable(){
+        viewRequests = new Runnable(){
             @Override
             public void run() {
-                getProjects();
+                getRequests();
             }
         };
-        Thread thread =  new Thread(null, viewProjects, "MagentoBackground");
+        Thread thread =  new Thread(null, viewRequests, "MagentoBackground");
         thread.start();
-        progressDialog = ProgressDialog.show(ProjectListActivity.this,    
+        progressDialog = ProgressDialog.show(RequestListActivity.this,    
               "Please wait...", "Retrieving data ...", true);
               
     }
@@ -46,33 +44,33 @@ public class ProjectListActivity extends ListActivity {
 
         @Override
         public void run() {
-            if(projects != null && projects.size() > 0){
+            if(requests != null && requests.size() > 0){
                 adapter.notifyDataSetChanged();
-                for(int i=0;i<projects.size();i++)
-                adapter.add(projects.get(i));
+                for(int i=0;i<requests.size();i++)
+                adapter.add(requests.get(i));
             }
             progressDialog.dismiss();
             adapter.notifyDataSetChanged();
         }
     };
     
-	private void getProjects(){
+	private void getRequests(){
         try{
-            projects = new ArrayList<ProjectId>();
+            requests = new ArrayList<Request>();
             Client client = new Client(this);
-            projects = client.getProjectIds();
-            Log.i("ARRAY", ""+ projects.size());
+            requests = client.getMyRequests();
+            Log.i("ARRAY", ""+ requests.size());
           } catch (Exception e) { 
             Log.e("BACKGROUND_PROC", e.getMessage());
           }
           runOnUiThread(returnRes);
       }
 	
-	  private class ProjectAdapter extends ArrayAdapter<ProjectId> {
+	  private class RequestAdapter extends ArrayAdapter<Request> {
 
-        private List<ProjectId> items;
+        private List<Request> items;
 
-        public ProjectAdapter(Context context, int textViewResourceId, List<ProjectId> items) {
+        public RequestAdapter(Context context, int textViewResourceId, List<Request> items) {
                 super(context, textViewResourceId, items);
                 this.items = items;
         }
@@ -84,11 +82,11 @@ public class ProjectListActivity extends ListActivity {
                     LayoutInflater vi = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                     v = vi.inflate(android.R.layout.simple_list_item_1, null);
                 }
-                ProjectId p = items.get(position);
-                if (p != null) {
+                Request req = items.get(position);
+                if (req != null) {
                         TextView tt = (TextView) v.findViewById(android.R.id.text1);
                         if (tt != null) {
-                              tt.setText(p.getName());                            
+                              tt.setText(req.getDescription());
                         }
                 }
                 return v;

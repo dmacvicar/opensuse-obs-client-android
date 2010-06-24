@@ -1,5 +1,4 @@
 package org.opensuse.android.obs;
 
-public interface Project {
-	String getName();
+public interface Project extends ProjectId {
 }

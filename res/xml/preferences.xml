@@ -2,6 +2,6 @@
 <PreferenceScreen
   xmlns:android="http://schemas.android.com/apk/res/android">
 <PreferenceCategory android:key="AuthCategory" android:title="Credentials"><EditTextPreference android:summary="Your login name" android:key="username" android:title="Username"></EditTextPreference>
-<EditTextPreference android:key="password" android:title="Password"></EditTextPreference>
+<EditTextPreference android:key="password" android:title="Password" android:password="true"></EditTextPreference>
 </PreferenceCategory>
 </PreferenceScreen>

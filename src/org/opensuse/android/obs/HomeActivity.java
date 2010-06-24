@@ -19,6 +19,7 @@ import android.widget.Toast;
 public class HomeActivity extends ListActivity {
 	
 	public static final String[] MAIN_MENU = new String[] {
+		"Pending Requests",
 		"Projects",
 		"Distributions"
 	};
@@ -32,19 +33,22 @@ public class HomeActivity extends ListActivity {
         super.onCreate(savedInstanceState);
         //setContentView(R.layout.main);
         setListAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, MAIN_MENU));
-        
-     // Initialize preferences if not configured
-		preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        if (!isConfigured()) configure();
+    }
+    
+    private boolean isConfigured() {
+ 		preferences = PreferenceManager.getDefaultSharedPreferences(this);
 		String username = preferences.getString("username", "");
-		
-		if (username == "") {
-			Intent i = new Intent(HomeActivity.this, BuildServiceSettingsActivity.class);
-			startActivity(i);
-			// A toast is a view containing a quick little message for the user.
-			Toast.makeText(HomeActivity.this,
-					"Please configure your build service credentials",
-					Toast.LENGTH_LONG).show();
-		}
+		return (username != "");
+    }
+    
+    private void configure() {    	
+    	Intent i = new Intent(HomeActivity.this, BuildServiceSettingsActivity.class);
+    	startActivity(i);
+    	// A toast is a view containing a quick little message for the user.
+    	Toast.makeText(HomeActivity.this,
+    			"Please configure your build service credentials",
+    			Toast.LENGTH_LONG).show();
     }
     
     @Override
@@ -75,22 +79,23 @@ public class HomeActivity extends ListActivity {
 	
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
-    	AlertDialog alertDialog = new AlertDialog.Builder(this).create();
-    	alertDialog.setTitle("Item Selected");  
-    	alertDialog.setMessage("You just clicked an  item position #" + String.valueOf(position));
-    	alertDialog.setButton("OK",new DialogInterface.OnClickListener(){
-    	    public void onClick(DialogInterface dialog, int which) {
-    	    	return;
-    	}}); 
-    	alertDialog.show();
+    	
     	super.onListItemClick(l, v, position, id);
-    	  
+    	
+    	if (!isConfigured()) {
+    		configure();
+    		return;
+    	}
+    	
     	switch (position)
     	{
     		case 0:    			 
-    			startActivity(new Intent(HomeActivity.this, ProjectListActivity.class));
+    			startActivity(new Intent(HomeActivity.this, RequestListActivity.class));
     			break;
     		case 1:    			 
+    			startActivity(new Intent(HomeActivity.this, ProjectListActivity.class));
+    			break;
+    		case 2:    			 
     			startActivity(new Intent(HomeActivity.this, DistributionListActivity.class));
     			break;
     	}

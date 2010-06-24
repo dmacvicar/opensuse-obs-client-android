@@ -6,6 +6,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URI;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.*;
@@ -44,6 +45,8 @@ public class HttpCoreConnection implements RestConnection {
 	public void setHost(String host) {
 		this.host = host;
 	}
+	
+	public String getUsername() { return this.username; }
 	
 	public void setUsername(String username) {
 		this.username = username;
@@ -137,6 +140,7 @@ public class HttpCoreConnection implements RestConnection {
         );        
 		return client;
 	}
+	
 	private String buildUri(String path) {
 		return protocol + host + "/" + path;
 	}
