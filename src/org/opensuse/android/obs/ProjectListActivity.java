@@ -3,6 +3,8 @@ package org.opensuse.android.obs;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.opensuse.android.obs.data.Project;
+
 import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
@@ -18,15 +20,15 @@ import android.widget.TextView;
 
 public class ProjectListActivity extends ListActivity {
 	private ProgressDialog progressDialog = null; 
-    private List<ProjectId> projects = null;
-    private ArrayAdapter<ProjectId> adapter;
+    private List<Project> projects = null;
+    private ArrayAdapter<Project> adapter;
     private Runnable viewProjects;
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
-        projects = new ArrayList<ProjectId>();
+        projects = new ArrayList<Project>();
         this.adapter = new ProjectAdapter(this, android.R.layout.simple_list_item_1, projects);
         setListAdapter(this.adapter);
 
@@ -58,7 +60,7 @@ public class ProjectListActivity extends ListActivity {
     
 	private void getProjects(){
         try{
-            projects = new ArrayList<ProjectId>();
+            projects = new ArrayList<Project>();
             Client client = new Client(this);
             projects = client.getProjectIds();
             Log.i("ARRAY", ""+ projects.size());
@@ -68,11 +70,11 @@ public class ProjectListActivity extends ListActivity {
           runOnUiThread(returnRes);
       }
 	
-	  private class ProjectAdapter extends ArrayAdapter<ProjectId> {
+	  private class ProjectAdapter extends ArrayAdapter<Project> {
 
-        private List<ProjectId> items;
+        private List<Project> items;
 
-        public ProjectAdapter(Context context, int textViewResourceId, List<ProjectId> items) {
+        public ProjectAdapter(Context context, int textViewResourceId, List<Project> items) {
                 super(context, textViewResourceId, items);
                 this.items = items;
         }
@@ -84,7 +86,7 @@ public class ProjectListActivity extends ListActivity {
                     LayoutInflater vi = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                     v = vi.inflate(android.R.layout.simple_list_item_1, null);
                 }
-                ProjectId p = items.get(position);
+                Project p = items.get(position);
                 if (p != null) {
                         TextView tt = (TextView) v.findViewById(android.R.id.text1);
                         if (tt != null) {

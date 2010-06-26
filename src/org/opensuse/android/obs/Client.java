@@ -6,7 +6,13 @@ import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 
-import org.opensuse.android.HttpCoreConnection;
+import org.opensuse.android.HttpCoreRestClient;
+import org.opensuse.android.obs.data.Collection;
+import org.opensuse.android.obs.data.Distribution;
+import org.opensuse.android.obs.data.DistributionList;
+import org.opensuse.android.obs.data.Project;
+import org.opensuse.android.obs.data.Package;
+import org.opensuse.android.obs.data.Request;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -14,24 +20,13 @@ import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
 
-import zipwire.rest.ApacheRestConnection;
-import zipwire.text.CamelCase;
-import zipwire.xml.XmlNamingRule;
-
-public class Client extends HttpCoreConnection {
+public class Client extends HttpCoreRestClient {
 
 	public static final String PREFERENCES = "preferences";
 	
 	private static final String DEFAULT_API_HOST = "api.opensuse.org";
 	private static final String DEFAULT_USERNAME = "";
 	private static final String DEFAULT_PASSWORD = "";
-	
-	/* Standard Rails-like naming rule */
-	static XmlNamingRule xmlNamingRule = new XmlNamingRule(){
-		public String transform(String method) {
-	      return new CamelCase(method).separateWith("-").toLowerCase();
-	    }
-	  };
 	
 	/* 
 	 * Constructor from context, which allows the client to access the preferences of
@@ -46,55 +41,49 @@ public class Client extends HttpCoreConnection {
 		setUsername(username);
 		setPassword(password);
 		setHost(DEFAULT_API_HOST);
-		setXmlNamingRule(xmlNamingRule);
 	}
 	
 	public List<Project> getProjects() {
 		return getProjectsMatching("");
 	}
 	
-	public List<ProjectId> getProjectIds() {
+	public List<Project> getProjectIds() {
 		return getProjectIdsMatching("");
 	}
 	
-	public List<ProjectId> getProjectIdsMatching(String match) {
+	public List<Project> getProjectIdsMatching(String match) {
 		String path = "search/project_id" + "?match=" + encodeMatch(match);
 		Log.i("OBSCLIENT", "Retrieving: " + path);
-		return get(path)
-			.asList(ProjectId.class, "project");
+		return get(path, Collection.class).getProjects();
 	}
 	
 	public List<Project> getProjectsMatching(String match) {
 		String path = "search/project" + "?match=" + encodeMatch(match);
 		Log.i("OBSCLIENT", "Retrieving: " + path);
-		return get(path)
-			.asList(Project.class, "project");
+		return get(path, Collection.class).getProjects();
 	}
 	
 	public List<Package> getPackagesMatching(String match) {
 		String path = "search/package" + "?match=" + encodeMatch(match);
 		Log.i("OBSCLIENT", "Retrieving: " + path);
-		return get(path)
-			.asList(Package.class, "package");
+		return get(path, Collection.class).getPackages();
 	}
 	
-	public List<PackageId> getPackageIdsMatching(String match) {
+	public List<Package> getPackageIdsMatching(String match) {
 		String path = "search/package_id" + "?match=" + encodeMatch(match);
 		Log.i("OBSCLIENT", "Retrieving: " + path);
-		return get(path)
-			.asList(PackageId.class, "package");
+		return get(path, Collection.class).getPackages();
 	}
 	
 	public List<Distribution> getDistributions() {
-		return get("distributions").asList(Distribution.class, "distribution");
+		return get("distributions", DistributionList.class).getDistributions();
 	}
 	
 	public List<Request> getRequestsMatching(String match) {
 		String path = "search/request";
 		path = path + "?match=" + encodeMatch(match);
 		Log.i("OBSCLIENT", "Retrieving: " + path);
-		return get(path)
-			.asList(Request.class, "request");
+		return get(path, Collection.class).getRequests();
 	}
 	
 	public List<Request> getRequests() {
@@ -105,14 +94,14 @@ public class Client extends HttpCoreConnection {
 		List<String> xpaths = new ArrayList<String>();
 		List<String> projects = new ArrayList<String>();
 		String query = "(state/@name='new') and (";
-		List<ProjectId> projectIds = getProjectIdsMatching("person/@userid = '" + getUsername() + "' and person/@role = 'maintainer'");
-		for (ProjectId project: projectIds) {
+		List<Project> projectIds = getProjectIdsMatching("person/@userid = '" + getUsername() + "' and person/@role = 'maintainer'");
+		for (Project project: projectIds) {
 			projects.add(project.getName());
 			xpaths.add("action/target/@project='" + project.getName() + "'");
 		}
 		
-		List<PackageId> packages = getPackageIdsMatching("person/@userid = '" + getUsername() + "' and person/@role = 'maintainer'");
-		for (PackageId pkg: packages) {
+		List<Package> packages = getPackageIdsMatching("person/@userid = '" + getUsername() + "' and person/@role = 'maintainer'");
+		for (Package pkg: packages) {
 			// if the project is already in the list, no need to add this clause
 			// replace this with a real xPath join
 			if (projects.contains(pkg.getProject()))

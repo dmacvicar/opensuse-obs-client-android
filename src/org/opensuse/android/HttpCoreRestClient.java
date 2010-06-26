@@ -1,6 +1,8 @@
 package org.opensuse.android;
 
 import org.opensuse.android.util.Base64;
+import org.simpleframework.xml.Serializer;
+import org.simpleframework.xml.core.Persister;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -15,27 +17,37 @@ import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.methods.*;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
+
 import android.util.Log;
 
-import zipwire.rest.Resource;
-import zipwire.exception.ZipwireException;
-import zipwire.rest.RestConnection;
-import zipwire.xml.XmlNamingRule;
-
-public class HttpCoreConnection implements RestConnection {
+public class HttpCoreRestClient implements RestClient {
 	private String protocol, host, username, password;
-	private XmlNamingRule xmlNamingRule;
-	
-	public HttpCoreConnection(String host, String username, String password, XmlNamingRule xmlNamingRule) {
-		if (host == null) throw new ZipwireException("Need to specify a host, username, and password");
+	private Serializer serializer;
+		
+	public HttpCoreRestClient(String host, String username, String password) {
+		if (host == null) throw new RuntimeException("Need to specify a host, username, and password");
 		this.protocol = "http://";
 		this.host = host;
 		this.username = username;
 		this.password = password;
-		this.xmlNamingRule = xmlNamingRule;
+		this.serializer = new Persister();		
 	}
 	
-	public HttpCoreConnection() {
+	public HttpCoreRestClient() {
+		this.serializer = new Persister();
+	}
+	
+	public <T> T get(String path, Class<T> returnType) {
+		Resource resource = get(path);
+		try {
+			T object = serializer.read(returnType, resource.getContent());
+			return object;
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			Log.e("HTTPCLIENT", e.getMessage());
+			throw new RuntimeException(e);
+		}
 	}
 	
 	public void setProtocol(String protocol) {
@@ -56,13 +68,10 @@ public class HttpCoreConnection implements RestConnection {
 		this.password = password;
 	}
 	
-	public void setXmlNamingRule(XmlNamingRule xmlNamingRule) {
-		this.xmlNamingRule = xmlNamingRule;
-	}
-	
 	public Resource get(String uri) {
         return execute(new HttpGet(buildUri(uri)));
 	}
+	
 	public Resource post(String uri, String xml){
 		return execute(add(new HttpPost(buildUri(uri)), xml));
 	}
@@ -82,12 +91,11 @@ public class HttpCoreConnection implements RestConnection {
 			Log.w("HTTP_STATUS", Integer.toString(status));
 			//Log.i("HTTP_CONTENT", response.getEntity().getContent().);
             
-	        return (new Resource(xmlNamingRule,
-	        			status,
+	        return (new Resource(status,
 	        			response.getEntity().getContent()));
 		}	
 		catch(Exception e){
-			throw new ZipwireException("Couldn't execute request:", e);
+			throw new RuntimeException("Couldn't execute request:", e);
 		}
 	}
 	private HttpUriRequest add(HttpEntityEnclosingRequestBase m, String xml) {
@@ -97,36 +105,9 @@ public class HttpCoreConnection implements RestConnection {
 			return m;
 		}
 		catch(Exception e){
-			throw new ZipwireException(e);
+			throw new RuntimeException(e);
 		}
 	}
-	
-	private static String convertStreamToString(InputStream is) {
-        /*
-         * To convert the InputStream to String we use the BufferedReader.readLine()
-         * method. We iterate until the BufferedReader return null which means
-         * there's no more data to read. Each line will appended to a StringBuilder
-         * and returned as String.
-         */
-        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-        StringBuilder sb = new StringBuilder();
- 
-        String line = null;
-        try {
-            while ((line = reader.readLine()) != null) {
-                sb.append(line + "\n");
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                is.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return sb.toString();
-    }
 	
 	private String getEncodedCredentials() {
 		return(Base64.encodeBytes((this.username+":"+this.password).getBytes()));

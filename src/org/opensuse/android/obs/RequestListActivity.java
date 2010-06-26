@@ -3,6 +3,8 @@ package org.opensuse.android.obs;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.opensuse.android.obs.data.Request;
+
 import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.Context;
