@@ -107,6 +107,7 @@ public class Client extends HttpCoreConnection {
 		String query = "(state/@name='new') and (";
 		List<ProjectId> projectIds = getProjectIdsMatching("person/@userid = '" + getUsername() + "' and person/@role = 'maintainer'");
 		for (ProjectId project: projectIds) {
+			projects.add(project.getName());
 			xpaths.add("action/target/@project='" + project.getName() + "'");
 		}
 		
