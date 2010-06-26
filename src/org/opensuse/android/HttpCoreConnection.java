@@ -84,8 +84,8 @@ public class HttpCoreConnection implements RestConnection {
             
 	        return (new Resource(xmlNamingRule,
 	        			status,
-	        			convertStreamToString(response.getEntity().getContent())));
-		}
+	        			response.getEntity().getContent()));
+		}	
 		catch(Exception e){
 			throw new ZipwireException("Couldn't execute request:", e);
 		}
