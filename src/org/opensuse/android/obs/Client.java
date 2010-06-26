@@ -111,7 +111,6 @@ public class Client extends HttpCoreConnection {
 			xpaths.add("action/target/@project='" + project.getName() + "'");
 		}
 		
-		/*
 		List<PackageId> packages = getPackageIdsMatching("person/@userid = '" + getUsername() + "' and person/@role = 'maintainer'");
 		for (PackageId pkg: packages) {
 			// if the project is already in the list, no need to add this clause
@@ -120,10 +119,7 @@ public class Client extends HttpCoreConnection {
 				continue;
 			xpaths.add("(action/target/@project='" + pkg.getProject() + "' and " + "action/target/@package='" + pkg.getName() + "')");
 		}
-		*/
-		Log.i("OBSCLIENT", String.valueOf(xpaths.size()));
-		
-		
+
 		query += TextUtils.join(" or ", xpaths);
 		query += ")";
 		return getRequestsMatching(query);
