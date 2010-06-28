@@ -13,7 +13,7 @@ request related to you.
 
 ## Building
 
-* Checkout http://github.com/dmacvicar/ZipwireRest and do ant in build/
+* Get the Simple XML serializer jar from http://simple.sourceforge.net
 * Copy the .jar to vendor/ in this source tree
 * Build with Eclipse and Android SDK as expected
 
