@@ -23,7 +23,6 @@ package org.opensuse.android.obs;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.EnumSet;
 import java.util.List;
 
 import org.opensuse.android.HttpCoreRestClient;

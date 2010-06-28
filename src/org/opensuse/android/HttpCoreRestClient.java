@@ -24,12 +24,6 @@ import org.opensuse.android.util.Base64;
 import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.URI;
-
 import org.apache.http.HttpResponse;
 import org.apache.http.client.*;
 import org.apache.http.auth.AuthScope;
