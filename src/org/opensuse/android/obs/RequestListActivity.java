@@ -82,14 +82,28 @@ public class RequestListActivity extends ListActivity {
                 View v = convertView;
                 if (v == null) {
                     LayoutInflater vi = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                    v = vi.inflate(android.R.layout.simple_list_item_1, null);
+                    v = vi.inflate(R.layout.request_row, null);
                 }
                 Request req = items.get(position);
                 if (req != null) {
-                        TextView tt = (TextView) v.findViewById(android.R.id.text1);
-                        if (tt != null) {
-                              tt.setText(req.getDescription());
-                        }
+                        TextView tt = (TextView) v.findViewById(R.id.req_state);
+                        if (tt != null) tt.setText(req.getState().getName());
+                        tt = (TextView) v.findViewById(R.id.req_state_when);
+                        if (tt != null) tt.setText(req.getState().getWhen());
+                        tt = (TextView) v.findViewById(R.id.req_state_who);
+                        if (tt != null) tt.setText(req.getState().getWho());
+                        
+                        tt = (TextView) v.findViewById(R.id.req_submit_source);
+                        if (tt != null) tt.setText(req.getAction().getSource().getProject() +
+                        							"/" +
+                        							req.getAction().getSource().getPackage());
+                  
+                        tt = (TextView) v.findViewById(R.id.req_submit_target);
+                        if (tt != null) tt.setText(req.getAction().getTarget().getProject() +
+                        							"/" +
+                        							req.getAction().getTarget().getPackage());
+                        tt = (TextView) v.findViewById(R.id.req_description);
+                        if (tt != null) tt.setText(req.getDescription());                        
                 }
                 return v;
         }
