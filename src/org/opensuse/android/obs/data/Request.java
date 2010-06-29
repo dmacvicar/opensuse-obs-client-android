@@ -20,11 +20,13 @@
 
 package org.opensuse.android.obs.data;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.simpleframework.xml.Attribute;
 import org.simpleframework.xml.Element;
+import org.simpleframework.xml.ElementList;
 import org.simpleframework.xml.Root;
-
-import android.util.Log;
 
 @Root(strict=false)
 public class Request {
@@ -38,8 +40,8 @@ public class Request {
 	@Element(name="submit", required=false)	
 	private Submit submit;
 	
-	@Element(name="action", required=false)
-	private Action action;
+	@ElementList(entry="action", inline=true, required=false)
+	private List<Action> actions;
 	
 	public String getId() {
 		return id;
@@ -53,16 +55,21 @@ public class Request {
 		return state;
 	}
 	
-	public Action getAction() {		
-		Log.i("REQUESTACTION", ": " + action + "-" + submit);		
-		if (action == null && submit != null) {
+	public List<Action> getActions() {		
+		/* old requests have a submit element which is equivalent
+		 * to one action of type submit, if this is the case
+		 * convert it to a list of one actions
+		 */
+		if (getActions().isEmpty() && submit != null) {
+			List<Action> tmp_actions = new ArrayList<Action>();
 			Action tmp_action = new Action();
 			tmp_action.setType("submit");
 			tmp_action.setTarget(submit.getTarget());
 			tmp_action.setSource(submit.getSource());
-			return tmp_action;
+			tmp_actions.add(tmp_action);
+			return tmp_actions;
 		}
-		return action;
+		return actions;
 	}
 	
 	@Root(strict=false)

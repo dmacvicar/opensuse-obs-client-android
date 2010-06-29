@@ -113,15 +113,17 @@ public class RequestListActivity extends ListActivity {
                         tt = (TextView) v.findViewById(R.id.req_state_who);
                         if (tt != null) tt.setText(req.getState().getWho());
                         
-                        tt = (TextView) v.findViewById(R.id.req_submit_source);
-                        if (tt != null) tt.setText(req.getAction().getSource().getProject() +
-                        							"/" +
-                        							req.getAction().getSource().getPackage());
+                        if (! req.getActions().isEmpty()) {
+                        	tt = (TextView) v.findViewById(R.id.req_submit_source);
+                        	if (tt != null) tt.setText(req.getActions().get(0).getSource().getProject() +
+                        			"/" +
+                        			req.getActions().get(0).getSource().getPackage());
                   
-                        tt = (TextView) v.findViewById(R.id.req_submit_target);
-                        if (tt != null) tt.setText(req.getAction().getTarget().getProject() +
-                        							"/" +
-                        							req.getAction().getTarget().getPackage());
+                        	tt = (TextView) v.findViewById(R.id.req_submit_target);
+                        	if (tt != null) tt.setText(req.getActions().get(0).getTarget().getProject() +
+                        			"/" +
+                        			req.getActions().get(0).getTarget().getPackage());
+                        }
                         tt = (TextView) v.findViewById(R.id.req_description);
                         if (tt != null) tt.setText(req.getDescription());                        
                 }
