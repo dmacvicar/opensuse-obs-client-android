@@ -60,7 +60,7 @@ public class Request {
 		 * to one action of type submit, if this is the case
 		 * convert it to a list of one actions
 		 */
-		if (getActions().isEmpty() && submit != null) {
+		if (actions.isEmpty() && submit != null) {
 			List<Action> tmp_actions = new ArrayList<Action>();
 			Action tmp_action = new Action();
 			tmp_action.setType("submit");
