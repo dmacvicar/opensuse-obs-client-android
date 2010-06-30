@@ -258,7 +258,7 @@ public class Client extends HttpCoreRestClient {
 	 * @param size
 	 * @return	a scaled Bitmap
 	 */
-	private static Bitmap getGravatar(String id, int size) {
+	static Bitmap getGravatar(String id, int size) {
 		// Check to see if a gravatar of the correct size already exists
 		Bitmap bm = BitmapFactory.decodeFile(Environment.getExternalStorageDirectory()
 				+ "/opensuse-obs-client-android/gravatars/"
@@ -270,8 +270,9 @@ public class Client extends HttpCoreRestClient {
 				"http://www.gravatar.com/avatar.php?gravatar_id="
 						+ URLEncoder.encode(id) + "&size=50&d="
 						// Get the default gravatar from build service if ID doesn't exist
-						+ URLEncoder.encode("https://static.opensuse.org/hosts/build2.o.o/images/local/default_face.png"));
+						+ URLEncoder.encode("http://static.opensuse.org/hosts/build2.o.o/images/local/default_face.png"));
 				URLConnection conn = aURL.openConnection();
+				Log.i("HTTPCLIENT", "fetching gravatar for " + id + " from " + conn.getURL());
 				conn.connect();
 				InputStream is = conn.getInputStream();
 				BufferedInputStream bis = new BufferedInputStream(is);
@@ -304,6 +305,8 @@ public class Client extends HttpCoreRestClient {
 			} catch (FileNotFoundException e) {
 				Log.e("debug", "Error saving bitmap", e);
 			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
