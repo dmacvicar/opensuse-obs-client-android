@@ -23,18 +23,13 @@ package org.opensuse.android.obs;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.opensuse.android.obs.data.Request;
-
 import android.app.ListActivity;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.TextView;
+
+import org.opensuse.android.obs.data.Request;
 
 public class RequestListActivity extends ListActivity {
 	private ProgressDialog progressDialog = null; 
@@ -47,7 +42,7 @@ public class RequestListActivity extends ListActivity {
         super.onCreate(savedInstanceState);
         
         requests = new ArrayList<Request>();
-        this.adapter = new RequestAdapter(this, android.R.layout.simple_list_item_1, requests);
+        this.adapter = new RequestListAdapter(this, android.R.layout.simple_list_item_1, requests);
         setListAdapter(this.adapter);
 
         viewRequests = new Runnable(){
@@ -62,6 +57,7 @@ public class RequestListActivity extends ListActivity {
               "Please wait...", "Retrieving data ...", true);
               
     }
+    
     private Runnable returnRes = new Runnable() {
 
         @Override
@@ -88,46 +84,5 @@ public class RequestListActivity extends ListActivity {
           runOnUiThread(returnRes);
       }
 	
-	  private class RequestAdapter extends ArrayAdapter<Request> {
-
-        private List<Request> items;
-
-        public RequestAdapter(Context context, int textViewResourceId, List<Request> items) {
-                super(context, textViewResourceId, items);
-                this.items = items;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-                View v = convertView;
-                if (v == null) {
-                    LayoutInflater vi = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                    v = vi.inflate(R.layout.request_row, null);
-                }
-                Request req = items.get(position);
-                if (req != null) {
-                        TextView tt = (TextView) v.findViewById(R.id.req_state);
-                        if (tt != null) tt.setText(req.getState().getName());
-                        tt = (TextView) v.findViewById(R.id.req_state_when);
-                        if (tt != null) tt.setText(req.getState().getWhen());
-                        tt = (TextView) v.findViewById(R.id.req_state_who);
-                        if (tt != null) tt.setText(req.getState().getWho());
-                        
-                        if (! req.getActions().isEmpty()) {
-                        	tt = (TextView) v.findViewById(R.id.req_submit_source);
-                        	if (tt != null) tt.setText(req.getActions().get(0).getSource().getProject() +
-                        			"/" +
-                        			req.getActions().get(0).getSource().getPackage());
-                  
-                        	tt = (TextView) v.findViewById(R.id.req_submit_target);
-                        	if (tt != null) tt.setText(req.getActions().get(0).getTarget().getProject() +
-                        			"/" +
-                        			req.getActions().get(0).getTarget().getPackage());
-                        }
-                        tt = (TextView) v.findViewById(R.id.req_description);
-                        if (tt != null) tt.setText(req.getDescription());                        
-                }
-                return v;
-        }
-}
+	  
 }
