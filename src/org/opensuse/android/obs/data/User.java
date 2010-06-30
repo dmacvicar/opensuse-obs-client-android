@@ -13,9 +13,9 @@ public class User {
 	private String email;
 	@Element
 	private String realname;
-	@Element
+	@Element(required=false)
 	private String globalrole;
-	@ElementList(name="watchlist", entry="project")
+	@ElementList(name="watchlist", entry="project", required=false)
 	private List<Project> watchlist;
 	
 	public String getLogin() {
