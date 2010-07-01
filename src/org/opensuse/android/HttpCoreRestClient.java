@@ -23,6 +23,7 @@ package org.opensuse.android;
 import org.opensuse.android.util.Base64;
 import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
+import org.simpleframework.xml.transform.Matcher;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.*;
@@ -44,11 +45,13 @@ public class HttpCoreRestClient implements RestClient {
 		this.host = host;
 		this.username = username;
 		this.password = password;
-		this.serializer = new Persister();		
+		Matcher obsDateMatcher = new DateMatcher();
+		this.serializer = new Persister(obsDateMatcher);
 	}
 	
 	public HttpCoreRestClient() {
-		this.serializer = new Persister();
+		Matcher obsDateMatcher = new DateMatcher();
+		this.serializer = new Persister(obsDateMatcher);
 	}
 	
 	public <T> T get(String path, Class<T> returnType) {

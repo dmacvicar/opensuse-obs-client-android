@@ -92,7 +92,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 public class Client extends HttpCoreRestClient {
-
+	
 	public static final String PREFERENCES = "preferences";
 	
 	private static final String DEFAULT_API_HOST = "api.opensuse.org";

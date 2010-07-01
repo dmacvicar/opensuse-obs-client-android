@@ -4,9 +4,12 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.opensuse.android.obs.data.Request;
+import org.opensuse.android.util.HumanDate;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +19,7 @@ import android.widget.TextView;
 
 public class RequestListAdapter extends ArrayAdapter<Request> {
 
+	private Context context;
     private List<Request> items;
     private LayoutInflater inflater;
     private HashMap<String, Bitmap> gravatars;
@@ -23,6 +27,7 @@ public class RequestListAdapter extends ArrayAdapter<Request> {
     
     public RequestListAdapter(Context context, int textViewResourceId, List<Request> items) {
             super(context, textViewResourceId, items);
+            this.context = context;
             this.inflater = LayoutInflater.from(context);
             this.items = items;
             this.client = new Client(context);
@@ -47,17 +52,23 @@ public class RequestListAdapter extends ArrayAdapter<Request> {
             }
             Request req = items.get(position);
             if (req != null) {            	
-            		ImageView iv = (ImageView) v.findViewById(R.id.request_who_icon);
+            		ImageView iv = (ImageView) v.findViewById(R.id.req_who_icon);
             		String login = req.getState().getWho();
         			iv.setImageBitmap(Client.getGravatar(client.getGravatarID(login), 30));
-                    TextView tt = (TextView) v.findViewById(R.id.req_state);
+        			
+                    iv = (ImageView) v.findViewById(R.id.req_state_icon);
+                    Log.i(getClass().getSimpleName(), "state: " + req.getState().getName());
+                    if (req.getState().getName() == "new") {
+                    	Bitmap bMap = BitmapFactory.decodeResource(context.getResources(), R.drawable.accept);
+                    	iv.setImageBitmap(bMap);
+                    }
+                    /*
                     if (tt != null) tt.setText(req.getState().getName());
                     tt = (TextView) v.findViewById(R.id.req_state_when);
                     if (tt != null) tt.setText(req.getState().getWhen());
-                    tt = (TextView) v.findViewById(R.id.req_state_who);
-                    if (tt != null) tt.setText(req.getState().getWho());
-                    
+                    */
                     if (! req.getActions().isEmpty()) {
+                    	/*
                     	tt = (TextView) v.findViewById(R.id.req_submit_source);
                     	if (tt != null) tt.setText(req.getActions().get(0).getSource().getProject() +
                     			"/" +
@@ -67,9 +78,19 @@ public class RequestListAdapter extends ArrayAdapter<Request> {
                     	if (tt != null) tt.setText(req.getActions().get(0).getTarget().getProject() +
                     			"/" +
                     			req.getActions().get(0).getTarget().getPackage());
+                    			*/
                     }
-                    tt = (TextView) v.findViewById(R.id.req_description);
-                    if (tt != null) tt.setText(req.getDescription());                        
+                    TextView tt = (TextView) v.findViewById(R.id.req_description);
+                    if (tt != null) tt.setText(req.getDescription());
+                    
+                    tt = (TextView) v.findViewById(R.id.req_header);
+                    if (tt != null) tt.setText((new HumanDate(req.getState().getWhen()).toHumanString()));
+                    
+                    tt = (TextView) v.findViewById(R.id.req_state_who);
+                    if (tt != null) tt.setText(req.getState().getWho());
+                    
+                    tt = (TextView) v.findViewById(R.id.req_summary);
+                    if (tt != null) tt.setText("oh la la");
             }
             return v;
     }

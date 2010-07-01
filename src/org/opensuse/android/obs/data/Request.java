@@ -21,12 +21,15 @@
 package org.opensuse.android.obs.data;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.simpleframework.xml.Attribute;
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.ElementList;
 import org.simpleframework.xml.Root;
+import org.simpleframework.xml.transform.Matcher;
+import org.simpleframework.xml.transform.Transform;
 
 @Root(strict=false)
 public class Request {
@@ -79,7 +82,7 @@ public class Request {
 		@Attribute
 		private String who;
 		@Attribute
-		private String when;
+		private Date when;
 		
 		public String getName() {
 			return name;
@@ -89,7 +92,7 @@ public class Request {
 			return who;
 		}
 		
-		public String getWhen() {
+		public Date getWhen() {
 			return when;
 		}
 	}
