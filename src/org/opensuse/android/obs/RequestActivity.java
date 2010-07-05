@@ -54,7 +54,7 @@ public class RequestActivity extends Activity {
                 getRequest();
             }
         };
-        Thread thread =  new Thread(null, viewRequest, "MagentoBackground");
+        Thread thread =  new Thread(null, viewRequest, getClass().getSimpleName()+"//retrieve_request");
         thread.start();
         progressDialog = ProgressDialog.show(RequestActivity.this,    
               "Please wait...", "Retrieving data ...", true);

@@ -38,7 +38,7 @@ import android.widget.TextView;
 
 public class DistributionListActivity extends ListActivity {
 	private ProgressDialog progressDialog = null; 
-    private List<Distribution> Distributions = null;
+    private List<Distribution> distributions = null;
     private ArrayAdapter<Distribution> adapter;
     private Runnable viewDistributions;
     
@@ -46,8 +46,8 @@ public class DistributionListActivity extends ListActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
-        Distributions = new ArrayList<Distribution>();
-        this.adapter = new DistributionAdapter(this, android.R.layout.simple_list_item_1, Distributions);
+        distributions = new ArrayList<Distribution>();
+        this.adapter = new DistributionAdapter(this, android.R.layout.simple_list_item_1, distributions);
         setListAdapter(this.adapter);
 
         viewDistributions = new Runnable(){
@@ -56,7 +56,7 @@ public class DistributionListActivity extends ListActivity {
                 getDistributions();
             }
         };
-        Thread thread =  new Thread(null, viewDistributions, "MagentoBackground");
+        Thread thread =  new Thread(null, viewDistributions, getClass().getSimpleName() + "//retrieve_distributions");
         thread.start();
         progressDialog = ProgressDialog.show(DistributionListActivity.this,    
               "Please wait...", "Retrieving data ...", true);
@@ -66,10 +66,10 @@ public class DistributionListActivity extends ListActivity {
 
         @Override
         public void run() {
-            if(Distributions != null && Distributions.size() > 0){
+            if(distributions != null && distributions.size() > 0){
                 adapter.notifyDataSetChanged();
-                for(int i=0;i<Distributions.size();i++)
-                adapter.add(Distributions.get(i));
+                for(int i=0;i<distributions.size();i++)
+                adapter.add(distributions.get(i));
             }
             progressDialog.dismiss();
             adapter.notifyDataSetChanged();
@@ -78,12 +78,12 @@ public class DistributionListActivity extends ListActivity {
     
 	private void getDistributions(){
         try{
-            Distributions = new ArrayList<Distribution>();
+            distributions = new ArrayList<Distribution>();
             Client client = new Client(this);
-            Distributions = client.getDistributions();
-            Log.i("ARRAY", ""+ Distributions.size());
+            distributions = client.getDistributions();
+            Log.i(getClass().getSimpleName(), distributions.size() + " distributions");
           } catch (Exception e) { 
-            Log.e("BACKGROUND_PROC", e.getMessage());
+            Log.e(getClass().getSimpleName(), e.getMessage());
           }
           runOnUiThread(returnRes);
       }

@@ -61,7 +61,7 @@ public class RequestListAdapter extends ArrayAdapter<Request> {
     	for (Request req : items ) {
     		String login = req.getState().getWho();
     		if (!gravatars.containsKey(login)) {
-    			gravatars.put(login, Client.getGravatar(client.getGravatarID(login), 30));
+    			gravatars.put(login, client.getGravatar(client.getGravatarID(login), 30));
 			}
     	}
 	}
@@ -76,7 +76,7 @@ public class RequestListAdapter extends ArrayAdapter<Request> {
             if (req != null) {            	
             		ImageView iv = (ImageView) v.findViewById(R.id.req_who_icon);
             		String login = req.getState().getWho();
-        			iv.setImageBitmap(Client.getGravatar(client.getGravatarID(login), 30));
+        			iv.setImageBitmap(client.getGravatar(client.getGravatarID(login), 30));
         			
                     iv = (ImageView) v.findViewById(R.id.req_state_icon);
                     Log.i(getClass().getSimpleName(), "state: " + req.getState().getName());

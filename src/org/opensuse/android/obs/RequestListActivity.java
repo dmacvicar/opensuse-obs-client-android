@@ -88,7 +88,7 @@ public class RequestListActivity extends ListActivity {
                 getRequests();
             }
         };
-        Thread thread =  new Thread(null, viewRequests, "MagentoBackground");
+        Thread thread =  new Thread(null, viewRequests, getClass().getSimpleName() + "//retrieve_requests");
         thread.start();
         progressDialog = ProgressDialog.show(RequestListActivity.this,    
               "Please wait...", "Retrieving data ...", true);
@@ -126,9 +126,9 @@ public class RequestListActivity extends ListActivity {
             requests = new ArrayList<Request>();
             Client client = new Client(this);
             requests = client.getMyRequests();
-            Log.i("ARRAY", ""+ requests.size());
+            Log.i(getClass().getSimpleName(), requests.size() + " requests");
           } catch (Exception e) { 
-            Log.e("BACKGROUND_PROC", e.getMessage());
+            Log.e(getClass().getSimpleName(), e.getMessage());
           }
           runOnUiThread(returnRes);
       }

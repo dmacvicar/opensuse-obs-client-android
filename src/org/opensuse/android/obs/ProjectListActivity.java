@@ -55,7 +55,7 @@ public class ProjectListActivity extends ListActivity {
                 getProjects();
             }
         };
-        Thread thread =  new Thread(null, viewProjects, "MagentoBackground");
+        Thread thread =  new Thread(null, viewProjects, getClass().getSimpleName() + "//retrieve_projects");
         thread.start();
         progressDialog = ProgressDialog.show(ProjectListActivity.this,    
               "Please wait...", "Retrieving data ...", true);
@@ -80,9 +80,9 @@ public class ProjectListActivity extends ListActivity {
             projects = new ArrayList<Project>();
             Client client = new Client(this);
             projects = client.getProjectIds();
-            Log.i("ARRAY", ""+ projects.size());
+            Log.i(getClass().getSimpleName(), projects.size() + " projects");
           } catch (Exception e) { 
-            Log.e("BACKGROUND_PROC", e.getMessage());
+            Log.e(getClass().getSimpleName(), e.getMessage());
           }
           runOnUiThread(returnRes);
       }

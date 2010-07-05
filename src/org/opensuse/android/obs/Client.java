@@ -102,8 +102,6 @@ public class Client extends HttpCoreRestClient {
 	private static final String DEFAULT_USERNAME = "";
 	private static final String DEFAULT_PASSWORD = "";
 	
-	private static final String OBSCLIENT = "OBSCLIENT";
-	
 	/* 
 	 * Constructor from context, which allows the client to access the preferences of
 	 * the application
@@ -156,8 +154,6 @@ public class Client extends HttpCoreRestClient {
 	}
 		
 	public String getDiff(String sproject, String spackage, String tproject, String tpackage, String rev) {
-		Log.i(OBSCLIENT, String.format("source: %s %s", sproject, spackage));
-		Log.i(OBSCLIENT, String.format("target: %s %s", tproject, tpackage));
 		String path = String.format("source/%s/%s?oproject=%s&opackage=%s&cmd=diff&expand=1",
 				encodeString(sproject),
 				encodeString(spackage),
@@ -212,7 +208,7 @@ public class Client extends HttpCoreRestClient {
 		try {
 			return URLEncoder.encode(str, "UTF-8");
 		} catch (UnsupportedEncodingException e) {
-			Log.w("URI", "Can't encode: " + str);
+			Log.w(getClass().getSimpleName(), "Can't encode: " + str);
 			return str;
 		}
 	}
@@ -260,7 +256,7 @@ public class Client extends HttpCoreRestClient {
 				}
 			}
 		} catch (FileNotFoundException e) {
-			Log.e("debug", "Error saving bitmap", e);
+			Log.e(getClass().getSimpleName(), "Error saving bitmap", e);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -276,7 +272,7 @@ public class Client extends HttpCoreRestClient {
 	 * @param size
 	 * @return	a scaled Bitmap
 	 */
-	static Bitmap getGravatar(String id, int size) {
+	public Bitmap getGravatar(String id, int size) {
 		// Check to see if a gravatar of the correct size already exists
 		Bitmap bm = BitmapFactory.decodeFile(Environment.getExternalStorageDirectory()
 				+ "/opensuse-obs-client-android/gravatars/"
@@ -298,7 +294,7 @@ public class Client extends HttpCoreRestClient {
 						// Get the default gravatar from build service if ID doesn't exist
 						+ URLEncoder.encode("http://static.opensuse.org/hosts/build2.o.o/images/local/default_face.png"));
 				URLConnection conn = aURL.openConnection();
-				Log.i("HTTPCLIENT", "fetching gravatar for " + id + " from " + conn.getURL());
+				Log.i(getClass().getSimpleName(), "fetching gravatar for " + id + " from " + conn.getURL());
 				conn.connect();
 				InputStream is = conn.getInputStream();
 				BufferedInputStream bis = new BufferedInputStream(is);
@@ -306,9 +302,9 @@ public class Client extends HttpCoreRestClient {
 				bis.close();
 				is.close();
 			} catch (IOException e) {
-				Log.e("debug", "Error getting bitmap", e);
+				Log.e(getClass().getSimpleName(), "Error getting bitmap", e);
 			} catch (NoSuchAlgorithmException e) {
-				Log.e("debug", "Error encoding id", e);
+				Log.e(getClass().getSimpleName(), "Error encoding id", e);
 				e.printStackTrace();
 			}
 			// Save the gravatar onto the SD card for later retrieval
@@ -332,7 +328,7 @@ public class Client extends HttpCoreRestClient {
 					bm.compress(CompressFormat.PNG, 100, new FileOutputStream(image));
 				}
 			} catch (FileNotFoundException e) {
-				Log.e("debug", "Error saving bitmap", e);
+				Log.e(getClass().getSimpleName(), "Error saving bitmap", e);
 			} catch (IOException e) {
 				e.printStackTrace();
 			} catch (Exception e) {
