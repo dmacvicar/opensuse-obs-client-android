@@ -127,8 +127,8 @@ public class RequestListActivity extends ListActivity {
             Client client = new Client(this);
             requests = client.getMyRequests();
             Log.i(getClass().getSimpleName(), requests.size() + " requests");
-          } catch (Exception e) { 
-            Log.e(getClass().getSimpleName(), e.getMessage());
+          } catch (Exception e) {
+            Log.e(getClass().getSimpleName(), "Can't retrieve requests", e);
           }
           runOnUiThread(returnRes);
       }

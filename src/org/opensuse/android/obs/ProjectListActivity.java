@@ -82,7 +82,7 @@ public class ProjectListActivity extends ListActivity {
             projects = client.getProjectIds();
             Log.i(getClass().getSimpleName(), projects.size() + " projects");
           } catch (Exception e) { 
-            Log.e(getClass().getSimpleName(), e.getMessage());
+        	Log.e(getClass().getSimpleName(), "Can't retrieve projects", e);
           }
           runOnUiThread(returnRes);
       }

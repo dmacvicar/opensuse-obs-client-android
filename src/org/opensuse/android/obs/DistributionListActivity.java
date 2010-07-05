@@ -83,7 +83,7 @@ public class DistributionListActivity extends ListActivity {
             distributions = client.getDistributions();
             Log.i(getClass().getSimpleName(), distributions.size() + " distributions");
           } catch (Exception e) { 
-            Log.e(getClass().getSimpleName(), e.getMessage());
+            Log.e(getClass().getSimpleName(), "Can't retrieve distributions", e);
           }
           runOnUiThread(returnRes);
       }

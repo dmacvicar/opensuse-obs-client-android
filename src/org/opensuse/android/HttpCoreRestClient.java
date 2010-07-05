@@ -81,8 +81,7 @@ public class HttpCoreRestClient implements RestClient {
 			return object;
 		}
 		catch (Exception e) {
-			e.printStackTrace();
-			Log.e(HTTPCLIENT, e.getMessage());
+			Log.e(getClass().getSimpleName(), "Can't retrieve resource", e);
 			throw new RuntimeException(e);
 		}
 	}

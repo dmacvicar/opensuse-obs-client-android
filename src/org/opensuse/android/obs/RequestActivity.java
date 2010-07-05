@@ -125,8 +125,8 @@ public class RequestActivity extends Activity {
         	// Replace tabs with two spaces so more file fits on the screen
         	diff = diff.replaceAll("\t", "  ");
         	
-          } catch (Exception e) { 
-            Log.e("BACKGROUND_PROC", e.getMessage());
+          } catch (Exception e) {
+            Log.e(getClass().getSimpleName(), "Can't retrieve request", e);
           }
           runOnUiThread(returnRes);
       }
