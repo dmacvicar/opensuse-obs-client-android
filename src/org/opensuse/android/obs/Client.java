@@ -64,11 +64,14 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigInteger;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
 
 import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -280,10 +283,18 @@ public class Client extends HttpCoreRestClient {
 				+ id + ".png");
 		// If not, fetch one
 		if (bm == null) {
+						
 			try {
+				
+				MessageDigest m = MessageDigest.getInstance("MD5");
+				byte[] data = id.getBytes(); 
+				m.update(data,0,data.length);
+				BigInteger i = new BigInteger(1,m.digest());
+				String md5sum = String.format("%1$032X", i).toLowerCase();
+								
 				URL aURL = new URL(
 				"http://www.gravatar.com/avatar.php?gravatar_id="
-						+ URLEncoder.encode(id) + "&size=50&d="
+						+ URLEncoder.encode(md5sum) + "&size=50&d="
 						// Get the default gravatar from build service if ID doesn't exist
 						+ URLEncoder.encode("http://static.opensuse.org/hosts/build2.o.o/images/local/default_face.png"));
 				URLConnection conn = aURL.openConnection();
@@ -296,6 +307,9 @@ public class Client extends HttpCoreRestClient {
 				is.close();
 			} catch (IOException e) {
 				Log.e("debug", "Error getting bitmap", e);
+			} catch (NoSuchAlgorithmException e) {
+				Log.e("debug", "Error encoding id", e);
+				e.printStackTrace();
 			}
 			// Save the gravatar onto the SD card for later retrieval
 			try {
