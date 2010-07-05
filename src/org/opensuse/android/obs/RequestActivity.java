@@ -23,12 +23,10 @@ package org.opensuse.android.obs;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.res.Resources;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Spannable;
 import android.text.style.BackgroundColorSpan;
 import android.util.Log;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.opensuse.android.XmlPersister;

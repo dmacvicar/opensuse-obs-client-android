@@ -23,8 +23,6 @@ package org.opensuse.android;
 import org.opensuse.android.util.Base64;
 import org.opensuse.android.util.IOUtils;
 import org.simpleframework.xml.Serializer;
-import org.simpleframework.xml.core.Persister;
-import org.simpleframework.xml.transform.Matcher;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.*;

@@ -21,14 +21,11 @@
 
 package org.opensuse.android;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.opensuse.android.obs.data.Request;
 import org.simpleframework.xml.transform.Matcher;
 import org.simpleframework.xml.transform.Transform;
-
-import android.util.Log;
 
 /*
  * matcher for the serializer framework that supports our custom

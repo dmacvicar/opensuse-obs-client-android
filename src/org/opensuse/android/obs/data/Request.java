@@ -29,11 +29,6 @@ import org.simpleframework.xml.Attribute;
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.ElementList;
 import org.simpleframework.xml.Root;
-import org.simpleframework.xml.transform.Matcher;
-import org.simpleframework.xml.transform.Transform;
-
-import android.os.Parcel;
-import android.os.Parcelable;
 
 @Root(strict=false)
 public class Request {
