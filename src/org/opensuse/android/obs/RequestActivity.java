@@ -15,15 +15,20 @@
   See the GNU General Public License for more details.
 
   You should have received a copy of the GNU General Public License
-  along with QuiteSleep.  If not, see <http://www.gnu.org/licenses/>.
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 package org.opensuse.android.obs;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.res.Resources;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.text.Spannable;
+import android.text.style.BackgroundColorSpan;
 import android.util.Log;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.opensuse.android.XmlPersister;
@@ -36,15 +41,14 @@ public class RequestActivity extends Activity {
 	private ProgressDialog progressDialog = null; 
     private Request request = null;
     private Runnable viewRequest;
-    private TextView tv;
+    
     private String diff;
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
-        this.tv = new TextView(this);
-        setContentView(this.tv);
+        setContentView(R.layout.request);
         
         viewRequest = new Runnable(){
             @Override
@@ -63,8 +67,27 @@ public class RequestActivity extends Activity {
         public void run() {
             if(request != null) {
             	
+            	TextView descView = (TextView) findViewById(R.id.descView);
+            	TextView diffView = (TextView) findViewById(R.id.diffView);
             	
-            	tv.setText(request.getDescription() + "\n" + diff);
+            	descView.setText(request.getDescription());
+            	// Apply some styles
+    			Resources res = getResources();
+            	// now apply some color to the diff        	    			
+    			diffView.setText(diff, TextView.BufferType.SPANNABLE);
+    			// Apply some styles
+    			//Resources res = m_context.getResources();
+    			Spannable str = (Spannable) diffView.getText();
+    			// Separate the diff by lines
+    			String[] diffContents = diff.split("\n");
+    			for(String diffLine : diffContents){
+    				if(diffLine.startsWith("+")){
+    					// TODO: Using indexOf here might be problems if there are two identical lines (it'll only pick the first one), should use the first line of the diff to see changed line number
+    					str.setSpan(new BackgroundColorSpan(res.getColor(R.color.addedText)), diff.indexOf(diffLine), diff.indexOf(diffLine) + diffLine.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+    				} else if(diffLine.startsWith("-")){
+    					str.setSpan(new BackgroundColorSpan(res.getColor(R.color.removedText)), diff.indexOf(diffLine), diff.indexOf(diffLine) + diffLine.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+    				}
+    			}            	
             }
             progressDialog.dismiss();
         }
@@ -100,6 +123,9 @@ public class RequestActivity extends Activity {
         					action.getSource().getRev());
         		}
         	}
+        	
+        	// Replace tabs with two spaces so more file fits on the screen
+        	diff = diff.replaceAll("\t", "  ");
         	
           } catch (Exception e) { 
             Log.e("BACKGROUND_PROC", e.getMessage());
