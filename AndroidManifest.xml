@@ -15,6 +15,7 @@
 <activity android:name="DistributionListActivity"></activity>
 <activity android:name="BuildServiceSettingsActivity"></activity>
 <activity android:name="RequestListActivity"></activity>
+<activity android:name="RequestActivity"></activity>
 </application>
 
 

@@ -99,6 +99,8 @@ public class Client extends HttpCoreRestClient {
 	private static final String DEFAULT_USERNAME = "";
 	private static final String DEFAULT_PASSWORD = "";
 	
+	private static final String OBSCLIENT = "OBSCLIENT";
+	
 	/* 
 	 * Constructor from context, which allows the client to access the preferences of
 	 * the application
@@ -123,26 +125,22 @@ public class Client extends HttpCoreRestClient {
 	}
 	
 	public List<Project> getProjectIdsMatching(String match) {
-		String path = "search/project_id" + "?match=" + encodeMatch(match);
-		Log.i("OBSCLIENT", "Retrieving: " + path);
+		String path = "search/project_id" + "?match=" + encodeString(match);
 		return get(path, Collection.class).getProjects();
 	}
 	
 	public List<Project> getProjectsMatching(String match) {
-		String path = "search/project" + "?match=" + encodeMatch(match);
-		Log.i("OBSCLIENT", "Retrieving: " + path);
+		String path = "search/project" + "?match=" + encodeString(match);
 		return get(path, Collection.class).getProjects();
 	}
 	
 	public List<Package> getPackagesMatching(String match) {
-		String path = "search/package" + "?match=" + encodeMatch(match);
-		Log.i("OBSCLIENT", "Retrieving: " + path);
+		String path = "search/package" + "?match=" + encodeString(match);
 		return get(path, Collection.class).getPackages();
 	}
 	
 	public List<Package> getPackageIdsMatching(String match) {
-		String path = "search/package_id" + "?match=" + encodeMatch(match);
-		Log.i("OBSCLIENT", "Retrieving: " + path);
+		String path = "search/package_id" + "?match=" + encodeString(match);
 		return get(path, Collection.class).getPackages();
 	}
 	
@@ -150,10 +148,27 @@ public class Client extends HttpCoreRestClient {
 		return get("distributions", DistributionList.class).getDistributions();
 	}
 	
+	public Request getRequest(String id) {
+		return get("request/" + id, Request.class);
+	}
+		
+	public String getDiff(String sproject, String spackage, String tproject, String tpackage, String rev) {
+		Log.i(OBSCLIENT, String.format("source: %s %s", sproject, spackage));
+		Log.i(OBSCLIENT, String.format("target: %s %s", tproject, tpackage));
+		String path = String.format("source/%s/%s?oproject=%s&opackage=%s&cmd=diff&expand=1",
+				encodeString(sproject),
+				encodeString(spackage),
+				encodeString(tproject),
+				encodeString(tpackage));
+		if (rev != null) {
+			path += String.format("&rev=%s", rev);
+		}
+		return postPlain(path, "");
+	}
+	
 	public List<Request> getRequestsMatching(String match) {
 		String path = "search/request";
-		path = path + "?match=" + encodeMatch(match);
-		Log.i("OBSCLIENT", "Retrieving: " + path);
+		path = path + "?match=" + encodeString(match);		
 		return get(path, Collection.class).getRequests();
 	}
 	
@@ -190,12 +205,12 @@ public class Client extends HttpCoreRestClient {
 	}
 	
 	/* Encode or return the same if not possible */
-	private String encodeMatch(String match) {
+	private String encodeString(String str) {
 		try {
-			return URLEncoder.encode(match, "UTF-8");
+			return URLEncoder.encode(str, "UTF-8");
 		} catch (UnsupportedEncodingException e) {
-			Log.w("URI", "Can't encode: " + match);
-			return match;
+			Log.w("URI", "Can't encode: " + str);
+			return str;
 		}
 	}
 	

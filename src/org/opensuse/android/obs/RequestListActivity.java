@@ -25,9 +25,12 @@ import java.util.List;
 
 import android.app.ListActivity;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 import org.opensuse.android.obs.data.Request;
 
@@ -57,6 +60,18 @@ public class RequestListActivity extends ListActivity {
               "Please wait...", "Retrieving data ...", true);
               
     }
+    
+    @Override
+    protected void onListItemClick(ListView l, View v, int position, long id) {
+      super.onListItemClick(l, v, position, id);
+      Request req = requests.get(position);
+      Bundle extras = new Bundle();
+      extras.putString("id", req.getId());
+      Intent intent = new Intent(RequestListActivity.this, RequestActivity.class);
+      intent.putExtras(extras);
+      startActivity(intent);
+    }
+
     
     private Runnable returnRes = new Runnable() {
 

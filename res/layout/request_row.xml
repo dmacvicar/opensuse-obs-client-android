@@ -36,7 +36,8 @@
         android:layout_alignWithParentIfMissing="true"
         android:gravity="right"                        
         android:text="No summary"
-        android:textSize="10dip" />
+        android:textSize="10dip"
+        android:textColor="#FFFF00" />
 
      <TextView
     	android:id="@+id/req_summary"
@@ -46,7 +47,8 @@
         android:layout_toRightOf="@id/req_state_who"
         android:layout_alignParentRight="true"
         android:layout_alignWithParentIfMissing="true"
-        android:gravity="right"                        
+        android:gravity="right"
+        android:textSize="10dip"                        
         android:text="No summary" />
         
     <TextView  
@@ -58,7 +60,6 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:gravity="right"        
-        android:singleLine="true"
         android:ellipsize="marquee"
         android:text="No description"
         android:textSize="10dip" />

@@ -31,6 +31,9 @@ import org.simpleframework.xml.Root;
 import org.simpleframework.xml.transform.Matcher;
 import org.simpleframework.xml.transform.Transform;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 @Root(strict=false)
 public class Request {
 	@Attribute
@@ -66,7 +69,7 @@ public class Request {
 		if (actions.isEmpty() && submit != null) {
 			List<Action> tmp_actions = new ArrayList<Action>();
 			Action tmp_action = new Action();
-			tmp_action.setType("submit");
+			tmp_action.setType(Action.Type.SUBMIT);
 			tmp_action.setTarget(submit.getTarget());
 			tmp_action.setSource(submit.getSource());
 			tmp_actions.add(tmp_action);
@@ -115,9 +118,17 @@ public class Request {
 	
 	@Root(strict=false)
 	public static class Action {
-				
+		
+		public enum Type {
+			SUBMIT,
+			DELETE,
+			CHANGE_DEVEL,
+			ADD_ROLE,
+			SET_BUGOWNER
+		}
+		
 		@Attribute
-		private String type;
+		private Type type;
 		@Element
 		private Source source;
 		@Element
@@ -129,11 +140,11 @@ public class Request {
 		public Target getTarget() {
 			return target;
 		}
-		public String getType() {
+		public Type getType() {
 			return type;
 		}
 
-		public void setType(String type) {
+		public void setType(Type type) {
 			this.type = type;
 		}
 		public void setSource(Source source) {

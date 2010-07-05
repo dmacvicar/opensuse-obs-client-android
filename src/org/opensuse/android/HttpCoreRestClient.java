@@ -21,6 +21,7 @@
 package org.opensuse.android;
 
 import org.opensuse.android.util.Base64;
+import org.opensuse.android.util.IOUtils;
 import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
 import org.simpleframework.xml.transform.Matcher;
@@ -36,6 +37,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import android.util.Log;
 
 public class HttpCoreRestClient implements RestClient {
+	private static final String HTTPCLIENT = "HTTPCLIENT";
 	private String protocol, host, username, password;
 	private Serializer serializer;
 		
@@ -45,24 +47,44 @@ public class HttpCoreRestClient implements RestClient {
 		this.host = host;
 		this.username = username;
 		this.password = password;
-		Matcher obsDateMatcher = new DateMatcher();
-		this.serializer = new Persister(obsDateMatcher);
+		this.serializer = new XmlPersister();		
 	}
 	
-	public HttpCoreRestClient() {
-		Matcher obsDateMatcher = new DateMatcher();
-		this.serializer = new Persister(obsDateMatcher);
+	public HttpCoreRestClient() {		
+		this.serializer = new XmlPersister();
+	}
+		
+	public <T> T post(String path, String data, Class<T> returnType) {
+		Resource resource = post(path, data);
+		return decode(resource, returnType);		
 	}
 	
 	public <T> T get(String path, Class<T> returnType) {
 		Resource resource = get(path);
+		return decode(resource, returnType);		
+	}
+	
+	public String getPlain(String path) {
+		Resource resource = get(path);
+		return IOUtils.readStream(resource.getContent());
+	}
+	
+	public String postPlain(String path, String data) {
+		Resource resource = post(path, data);
+		return IOUtils.readStream(resource.getContent());
+	}
+	
+	/**
+	 * Decodes the resource converting it to the specified type
+	 */
+	private <T> T decode(Resource resource, Class<T> returnType) {
 		try {
 			T object = serializer.read(returnType, resource.getContent());
 			return object;
 		}
 		catch (Exception e) {
 			e.printStackTrace();
-			Log.e("HTTPCLIENT", e.getMessage());
+			Log.e(HTTPCLIENT, e.getMessage());
 			throw new RuntimeException(e);
 		}
 	}
@@ -86,10 +108,12 @@ public class HttpCoreRestClient implements RestClient {
 	}
 	
 	public Resource get(String uri) {
+		Log.i(HTTPCLIENT, "GET: " + uri);
         return execute(new HttpGet(buildUri(uri)));
 	}
 	
 	public Resource post(String uri, String xml){
+		Log.i(HTTPCLIENT, "POST: " + uri);
 		return execute(add(new HttpPost(buildUri(uri)), xml));
 	}
 	public Resource put(String uri, String xml) {

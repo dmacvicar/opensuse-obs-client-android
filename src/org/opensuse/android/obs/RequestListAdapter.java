@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.opensuse.android.obs.data.Request;
+import org.opensuse.android.obs.data.Request.Action;
 import org.opensuse.android.util.HumanDate;
 
 import android.content.Context;
@@ -62,23 +63,19 @@ public class RequestListAdapter extends ArrayAdapter<Request> {
                     	Bitmap bMap = BitmapFactory.decodeResource(context.getResources(), R.drawable.accept);
                     	iv.setImageBitmap(bMap);
                     }
-                    /*
-                    if (tt != null) tt.setText(req.getState().getName());
-                    tt = (TextView) v.findViewById(R.id.req_state_when);
-                    if (tt != null) tt.setText(req.getState().getWhen());
-                    */
+                    
                     if (! req.getActions().isEmpty()) {
-                    	/*
-                    	tt = (TextView) v.findViewById(R.id.req_submit_source);
-                    	if (tt != null) tt.setText(req.getActions().get(0).getSource().getProject() +
-                    			"/" +
-                    			req.getActions().get(0).getSource().getPackage());
-              
-                    	tt = (TextView) v.findViewById(R.id.req_submit_target);
-                    	if (tt != null) tt.setText(req.getActions().get(0).getTarget().getProject() +
-                    			"/" +
-                    			req.getActions().get(0).getTarget().getPackage());
-                    			*/
+                    	String actiondesc = "";
+                    	Action action = req.getActions().get(0);
+                    	switch (action.getType()) {
+                    	case SUBMIT:
+                    		actiondesc = action.getSource().getProject() + "/" + action.getSource().getPackage() +
+                    					 " \u2192 " +
+                    					 action.getTarget().getProject() + "/" + action.getTarget().getPackage();
+                    		break;
+                    	}
+                    	TextView tt = (TextView) v.findViewById(R.id.req_summary);                    
+                        if (tt != null && actiondesc != null) tt.setText(actiondesc);
                     }
                     TextView tt = (TextView) v.findViewById(R.id.req_description);
                     if (tt != null) tt.setText(req.getDescription());
@@ -87,10 +84,8 @@ public class RequestListAdapter extends ArrayAdapter<Request> {
                     if (tt != null) tt.setText((new HumanDate(req.getState().getWhen()).toHumanString()));
                     
                     tt = (TextView) v.findViewById(R.id.req_state_who);
-                    if (tt != null) tt.setText(req.getState().getWho());
+                    if (tt != null) tt.setText(req.getState().getWho());                    
                     
-                    tt = (TextView) v.findViewById(R.id.req_summary);
-                    if (tt != null) tt.setText("oh la la");
             }
             return v;
     }

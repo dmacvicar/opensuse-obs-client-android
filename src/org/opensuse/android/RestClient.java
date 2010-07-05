@@ -21,5 +21,27 @@
 package org.opensuse.android;
 
 public interface RestClient {
+	/*
+	 * GET
+	 * Gets a XML resource and builds the object of the specified class
+	 */
 	public <T> T get(String path, Class<T> returnType);
+	
+	/*
+	 * POST
+	 * POST to a resource and builds the object of the specified class
+	 */
+	public <T> T post(String path, String data, Class<T> returnType);
+	
+	/*
+	 * GET
+	 * Gets a XML resource and returns plain data
+	 */
+	public String getPlain(String path);
+	
+	/*
+	 * POST
+	 * POST a XML resource and returns plain data
+	 */
+	public String postPlain(String path, String data);
 }
